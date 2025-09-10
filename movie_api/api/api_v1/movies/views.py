@@ -2,9 +2,16 @@ from typing import Annotated
 
 from .crud import MOVIES
 from .dependencies import found_movie
-from schemas.movies import Movie
+from schemas.movies import (
+    Movie,
+    MovieCreate,
+)
 
-from fastapi import APIRouter, Depends
+from fastapi import (
+    APIRouter,
+    Depends,
+    status,
+)
 
 
 router = APIRouter(
@@ -32,3 +39,16 @@ def get_movie(
     ],
 ):
     return movie
+
+
+@router.post(
+    "/",
+    response_model=Movie,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_movie(
+    movie_create: MovieCreate,
+):
+    return Movie(
+        **movie_create.model_dump(),
+    )
