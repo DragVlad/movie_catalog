@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from .crud import MOVIES
+from .crud import storage
 from .dependencies import found_movie
 from schemas.movies import (
     Movie,
@@ -25,7 +25,7 @@ router = APIRouter(
     response_model=list[Movie],
 )
 def get_movies_catalog():
-    return MOVIES
+    return storage.get_movies()
 
 
 @router.get(
@@ -47,8 +47,6 @@ def get_movie(
     status_code=status.HTTP_201_CREATED,
 )
 def create_movie(
-    movie_create: MovieCreate,
+    movie: MovieCreate,
 ):
-    return Movie(
-        **movie_create.model_dump(),
-    )
+    return storage.create_movie(movie)
