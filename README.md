@@ -2,5 +2,5 @@
 
 Start simple app:
 ```bash
-poetry run fastapi dev
+poetry run fastapi dev --reload
 ```
