@@ -2,19 +2,21 @@ from typing import (
     Annotated,
     Optional,
 )
-from annotated_types import Len
+from annotated_types import (
+    Len,
+    MaxLen,
+)
 from pydantic import BaseModel
 
 
 class MovieBase(BaseModel):
-    slug: str
-    name: str
     description: Optional[str] = None
     author: Optional[str] = None
 
 
 class Movie(MovieBase):
-    pass
+    slug: str
+    name: str
 
 
 class MovieCreate(Movie):
@@ -31,4 +33,11 @@ class MovieCreate(Movie):
             min_length=5,
             max_length=20,
         ),
+    ]
+
+
+class MovieUpdate(MovieBase):
+    description: Annotated[
+        str,
+        MaxLen,
     ]
