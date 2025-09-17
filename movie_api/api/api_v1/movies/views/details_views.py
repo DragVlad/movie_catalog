@@ -4,6 +4,7 @@ from api.api_v1.movies.crud import storage
 from api.api_v1.movies.dependencies import found_movie
 from schemas.movies import (
     Movie,
+    MovieUpdate,
 )
 
 from fastapi import (
@@ -40,15 +41,18 @@ router = APIRouter(
 )
 
 
+MovieBySlug = Annotated[
+    Movie,
+    Depends(found_movie),
+]
+
+
 @router.get(
     "/",
     response_model=Movie,
 )
 def get_movie(
-    movie: Annotated[
-        Movie,
-        Depends(found_movie),
-    ],
+    movie: MovieBySlug,
 ):
     return movie
 
@@ -58,9 +62,20 @@ def get_movie(
     status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete_movie(
-    movie: Annotated[
-        Movie,
-        Depends(found_movie),
-    ],
+    movie: MovieBySlug,
 ) -> None:
     storage.delete_movie(movie=movie)
+
+
+@router.put(
+    "/",
+    response_model=Movie,
+)
+def update_movie_details(
+    movie: MovieBySlug,
+    movie_in: MovieUpdate,
+):
+    return storage.update_movie(
+        movie=movie,
+        movie_in=movie_in,
+    )
