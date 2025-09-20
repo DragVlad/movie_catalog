@@ -41,3 +41,8 @@ class MovieUpdate(MovieBase):
         str,
         MaxLen,
     ]
+
+
+class MoviePartialUpdate(MovieBase):
+    description: str | None = None
+    author: str | None = None
