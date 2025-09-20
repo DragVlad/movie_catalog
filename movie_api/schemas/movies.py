@@ -17,7 +17,7 @@ class MovieBase(BaseModel):
 class Movie(MovieBase):
     slug: str
     name: str
-    viewers: int
+    viewers: int = 10
 
 
 class MovieCreate(Movie):
