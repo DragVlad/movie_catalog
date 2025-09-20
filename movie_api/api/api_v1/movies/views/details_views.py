@@ -6,6 +6,7 @@ from schemas.movies import (
     Movie,
     MoviePartialUpdate,
     MovieUpdate,
+    MovieRead,
 )
 
 from fastapi import (
@@ -50,7 +51,7 @@ MovieBySlug = Annotated[
 
 @router.get(
     "/",
-    response_model=Movie,
+    response_model=MovieRead,
 )
 def get_movie(
     movie: MovieBySlug,
@@ -70,7 +71,7 @@ def delete_movie(
 
 @router.put(
     "/",
-    response_model=Movie,
+    response_model=MovieRead,
 )
 def update_movie_details(
     movie: MovieBySlug,
@@ -84,7 +85,7 @@ def update_movie_details(
 
 @router.patch(
     "/",
-    response_model=Movie,
+    response_model=MovieRead,
 )
 def update_movie_details_partial(
     movie: MovieBySlug,
