@@ -17,6 +17,7 @@ class MovieBase(BaseModel):
 class Movie(MovieBase):
     slug: str
     name: str
+    viewers: int
 
 
 class MovieCreate(Movie):
@@ -46,3 +47,8 @@ class MovieUpdate(MovieBase):
 class MoviePartialUpdate(MovieBase):
     description: str | None = None
     author: str | None = None
+
+
+class MovieRead(MovieBase):
+    slug: str
+    name: str
