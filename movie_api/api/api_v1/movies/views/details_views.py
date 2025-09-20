@@ -4,6 +4,7 @@ from api.api_v1.movies.crud import storage
 from api.api_v1.movies.dependencies import found_movie
 from schemas.movies import (
     Movie,
+    MoviePartialUpdate,
     MovieUpdate,
 )
 
@@ -76,6 +77,20 @@ def update_movie_details(
     movie_in: MovieUpdate,
 ):
     return storage.update_movie(
+        movie=movie,
+        movie_in=movie_in,
+    )
+
+
+@router.patch(
+    "/",
+    response_model=Movie,
+)
+def update_movie_details_partial(
+    movie: MovieBySlug,
+    movie_in: MoviePartialUpdate,
+) -> Movie:
+    return storage.update_partial_movie(
         movie=movie,
         movie_in=movie_in,
     )
