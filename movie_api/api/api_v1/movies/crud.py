@@ -1,6 +1,7 @@
 from schemas.movies import (
     Movie,
     MovieCreate,
+    MoviePartialUpdate,
     MovieUpdate,
 )
 
@@ -35,6 +36,16 @@ class MovieStorage(BaseModel):
         movie_in: MovieUpdate,
     ):
         for field_name, value in movie_in:
+            setattr(movie, field_name, value)
+
+        return movie
+
+    def update_partial_movie(
+        self,
+        movie: Movie,
+        movie_in: MoviePartialUpdate,
+    ):
+        for field_name, value in movie_in.model_dump(exclude_unset=True).items():
             setattr(movie, field_name, value)
 
         return movie
