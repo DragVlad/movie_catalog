@@ -208,3 +208,6 @@ __marimo__/
 
 #vs_code
 .vscode/
+
+# local
+movies.json
