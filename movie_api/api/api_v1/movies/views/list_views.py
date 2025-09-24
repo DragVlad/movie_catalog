@@ -10,6 +10,7 @@ from schemas.movies import (
 from fastapi import (
     APIRouter,
     status,
+    BackgroundTasks,
 )
 
 router = APIRouter(
@@ -33,5 +34,7 @@ def get_movies_catalog():
 )
 def create_movie(
     movie: MovieCreate,
+    background_tasks: BackgroundTasks,
 ):
+    background_tasks.add_task(storage.save_state)
     return storage.create_movie(movie)
