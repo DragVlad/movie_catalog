@@ -33,7 +33,7 @@ class MovieStorage(BaseModel):
 
     def save_state(self) -> None:
         MOVIE_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
-        log.info("Saved movie to storage file.")
+        log.info("Saved movies to storage file.")
 
     @classmethod
     def from_state(cls) -> "MovieStorage":
@@ -53,16 +53,15 @@ class MovieStorage(BaseModel):
             **movie_in.model_dump(),
         )
         self.slug_to_movie[movie.slug] = movie
-        self.save_state()
         log.info("Added new movie: %s", movie.slug)
         return movie
 
     def delete_by_slug(self, slug: str) -> None:
         self.slug_to_movie.pop(slug, None)
-        self.save_state()
 
     def delete_movie(self, movie: Movie) -> None:
         self.delete_by_slug(slug=movie.slug)
+        log.info("Delete movie: %s", movie.slug)
 
     def update_movie(
         self,
@@ -71,7 +70,7 @@ class MovieStorage(BaseModel):
     ):
         for field_name, value in movie_in:
             setattr(movie, field_name, value)
-        self.save_state()
+        log.info("Update movie: %s", movie.slug)
         return movie
 
     def update_partial_movie(
@@ -81,7 +80,7 @@ class MovieStorage(BaseModel):
     ):
         for field_name, value in movie_in.model_dump(exclude_unset=True).items():
             setattr(movie, field_name, value)
-        self.save_state()
+        log.info("Partial update movie: %s", movie.slug)
         return movie
 
 
