@@ -1,21 +1,16 @@
-from typing import Annotated
-
 from api.api_v1.movies.crud import storage
+from api.api_v1.movies.dependencies import save_storage_state
 from schemas.movies import (
-    Movie,
     MovieCreate,
     MovieRead,
 )
 
-from fastapi import (
-    APIRouter,
-    status,
-    BackgroundTasks,
-)
+from fastapi import APIRouter, status, Depends
 
 router = APIRouter(
     prefix="/movies",
     tags=["Main views"],
+    dependencies=[Depends(save_storage_state)],
 )
 
 
@@ -34,7 +29,5 @@ def get_movies_catalog():
 )
 def create_movie(
     movie: MovieCreate,
-    background_tasks: BackgroundTasks,
 ):
-    background_tasks.add_task(storage.save_state)
     return storage.create_movie(movie)
