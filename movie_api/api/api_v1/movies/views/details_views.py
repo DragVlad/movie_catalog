@@ -13,7 +13,6 @@ from fastapi import (
     APIRouter,
     Depends,
     status,
-    BackgroundTasks,
 )
 
 
@@ -66,9 +65,7 @@ def get_movie(
 )
 def delete_movie(
     movie: MovieBySlug,
-    background_tasks: BackgroundTasks,
 ) -> None:
-    background_tasks.add_task(storage.save_state)
     storage.delete_movie(movie=movie)
 
 
@@ -79,9 +76,7 @@ def delete_movie(
 def update_movie_details(
     movie: MovieBySlug,
     movie_in: MovieUpdate,
-    background_tasks: BackgroundTasks,
 ):
-    background_tasks.add_task(storage.save_state)
     return storage.update_movie(
         movie=movie,
         movie_in=movie_in,
@@ -95,9 +90,7 @@ def update_movie_details(
 def update_movie_details_partial(
     movie: MovieBySlug,
     movie_in: MoviePartialUpdate,
-    background_tasks: BackgroundTasks,
 ) -> Movie:
-    background_tasks.add_task(storage.save_state)
     return storage.update_partial_movie(
         movie=movie,
         movie_in=movie_in,
