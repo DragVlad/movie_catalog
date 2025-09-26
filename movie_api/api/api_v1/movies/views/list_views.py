@@ -1,5 +1,8 @@
 from api.api_v1.movies.crud import storage
-from api.api_v1.movies.dependencies import save_storage_state
+from api.api_v1.movies.dependencies import (
+    save_storage_state,
+    api_token_required,
+)
 from schemas.movies import (
     MovieCreate,
     MovieRead,
@@ -10,7 +13,22 @@ from fastapi import APIRouter, status, Depends
 router = APIRouter(
     prefix="/movies",
     tags=["Main views"],
-    dependencies=[Depends(save_storage_state)],
+    dependencies=[
+        Depends(save_storage_state),
+        Depends(api_token_required),
+    ],
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Unauthenticated. Only for unsafe methods.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Invalid API token",
+                    },
+                },
+            },
+        },
+    },
 )
 
 
