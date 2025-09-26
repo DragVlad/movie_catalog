@@ -8,7 +8,11 @@ from schemas.movies import (
     MovieRead,
 )
 
-from fastapi import APIRouter, status, Depends
+from fastapi import (
+    APIRouter,
+    status,
+    Depends,
+)
 
 router = APIRouter(
     prefix="/movies",
