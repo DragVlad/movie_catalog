@@ -6,11 +6,22 @@ from schemas.movies import Movie
 from fastapi import (
     HTTPException,
     BackgroundTasks,
+    Request,
     status,
 )
 
 
 log = logging.getLogger(__name__)
+
+
+UNSAVE_METHODS = frozenset(
+    {
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+    }
+)
 
 
 def found_movie(
@@ -27,8 +38,10 @@ def found_movie(
 
 
 def save_storage_state(
+    request: Request,
     background_tasks: BackgroundTasks,
 ):
     yield
-    log.info("Add background task to save movie storage")
-    background_tasks.add_task(storage.save_state)
+    if request.method in UNSAVE_METHODS:
+        log.info("Add background task to save movie storage")
+        background_tasks.add_task(storage.save_state)
