@@ -9,13 +9,14 @@ from schemas.movies import Movie
 from fastapi import (
     HTTPException,
     BackgroundTasks,
-    Header,
+    Depends,
     Request,
     status,
 )
-
-
-log = logging.getLogger(__name__)
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
 
 
 UNSAVE_METHODS = frozenset(
@@ -25,6 +26,14 @@ UNSAVE_METHODS = frozenset(
         "PATCH",
         "DELETE",
     }
+)
+
+log = logging.getLogger(__name__)
+
+static_api_token = HTTPBearer(
+    scheme_name="Static API token",
+    description="Your **Static API token** from the developer portal. [Read more](#)",
+    auto_error=False,
 )
 
 
@@ -55,13 +64,20 @@ def api_token_required(
     request: Request,
     api_token: Annotated[
         str,
-        Header(alias="x-auth-token"),
-    ] = "",
+        HTTPAuthorizationCredentials | None,
+        Depends(static_api_token),
+    ] = None,
 ):
     if request.method not in UNSAVE_METHODS:
         return None
 
-    if api_token not in API_TOKENS:
+    if not api_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API token is empty",
+        )
+
+    if api_token.credentials not in API_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
