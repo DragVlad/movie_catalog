@@ -9,7 +9,7 @@ from schemas.movies import Movie
 from fastapi import (
     HTTPException,
     BackgroundTasks,
-    Query,
+    Header,
     Request,
     status,
 )
@@ -55,7 +55,7 @@ def api_token_required(
     request: Request,
     api_token: Annotated[
         str,
-        Query(),
+        Header(alias="x-auth-token"),
     ] = "",
 ):
     if request.method not in UNSAVE_METHODS:
