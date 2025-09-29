@@ -24,7 +24,7 @@ from fastapi.security import (
 )
 
 
-UNSAVE_METHODS = frozenset(
+UNSAFE_METHODS = frozenset(
     {
         "POST",
         "PUT",
@@ -66,7 +66,7 @@ def save_storage_state(
     background_tasks: BackgroundTasks,
 ):
     yield
-    if request.method in UNSAVE_METHODS:
+    if request.method in UNSAFE_METHODS:
         log.info("Add background task to save movie storage")
         background_tasks.add_task(storage.save_state)
 
@@ -79,7 +79,7 @@ def api_token_required(
         Depends(static_api_token),
     ] = None,
 ):
-    if request.method not in UNSAVE_METHODS:
+    if request.method not in UNSAFE_METHODS:
         return None
 
     if not api_token:
@@ -102,7 +102,7 @@ def user_basic_auth_required(
         Depends(user_basic_auth),
     ] = None,
 ):
-    if request.method not in UNSAVE_METHODS:
+    if request.method not in UNSAFE_METHODS:
         return
 
     if (
