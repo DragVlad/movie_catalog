@@ -22,7 +22,7 @@ router = APIRouter(
     dependencies=[
         Depends(save_storage_state),
         Depends(user_basic_auth_required),
-        Depends(api_token_required),
+        # Depends(api_token_required),
     ],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
